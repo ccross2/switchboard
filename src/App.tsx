@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#1a1a2e] text-gray-100">
       {/* Sidebar — service switcher */}
-      <Sidebar sendToBridge={sendToBridge} />
+      <Sidebar />
 
       {/* Chat list panel */}
       <div className="w-[300px] flex-shrink-0 border-r border-[#2a2a4a] bg-[#16213e]">

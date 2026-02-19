@@ -1,9 +1,6 @@
+import { invoke } from "@tauri-apps/api/core";
 import { useAppStore } from "../stores/appStore";
-import type { ServiceID, Envelope } from "../types/protocol";
-
-interface Props {
-  sendToBridge: (service: ServiceID, envelope: Envelope) => Promise<void>;
-}
+import type { ServiceID } from "../types/protocol";
 
 function WhatsAppIcon() {
   return (
@@ -38,7 +35,7 @@ function SettingsIcon() {
   );
 }
 
-export default function Sidebar({ sendToBridge }: Props) {
+export default function Sidebar() {
   const activeService = useAppStore((s) => s.activeService);
   const setActiveService = useAppStore((s) => s.setActiveService);
   const chats = useAppStore((s) => s.chats);
@@ -48,8 +45,10 @@ export default function Sidebar({ sendToBridge }: Props) {
 
   const handleServiceClick = (service: ServiceID) => {
     setActiveService(service);
-    // Request initial status from the bridge
-    sendToBridge(service, { type: "status.get" }).catch(console.error);
+    // Start the bridge if not already running
+    invoke("start_bridge", { service }).catch((e) =>
+      console.error(`start_bridge(${service}):`, e),
+    );
   };
 
   const services: Array<{ id: ServiceID; label: string; color: string; icon: React.ReactNode }> = [

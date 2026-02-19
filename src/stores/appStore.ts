@@ -70,7 +70,10 @@ export const useAppStore = create<AppState>((set) => ({
 
   setChats: (service, chats) =>
     set((state) => ({
-      chats: { ...state.chats, [service]: chats },
+      chats: {
+        ...state.chats,
+        [service]: [...chats].sort((a, b) => (b.last_time ?? 0) - (a.last_time ?? 0)),
+      },
     })),
 
   addMessage: (service, chatId, message) => {
@@ -79,8 +82,21 @@ export const useAppStore = create<AppState>((set) => ({
       const existing = state.messages[key] ?? [];
       // Avoid duplicates by id
       if (existing.some((m) => m.id === message.id)) return state;
+      // Update chat's last_message + last_time and re-sort
+      const updatedChats = state.chats[service]
+        .map((chat) =>
+          chat.id === chatId
+            ? {
+                ...chat,
+                last_message: message.text || "(media)",
+                last_time: message.timestamp,
+              }
+            : chat,
+        )
+        .sort((a, b) => (b.last_time ?? 0) - (a.last_time ?? 0));
       return {
         messages: { ...state.messages, [key]: [...existing, message] },
+        chats: { ...state.chats, [service]: updatedChats },
       };
     });
   },

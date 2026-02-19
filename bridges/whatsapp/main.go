@@ -41,9 +41,9 @@ func main() {
 	reader := protocol.NewReader()
 
 	// Open SQLite store.
-	dbLogger := waLog.Stdout("DB", "WARN", true)
+	// Use Noop logger so whatsmeow internal messages never pollute stdout (IPC channel).
 	container, err := sqlstore.New(context.Background(), "sqlite3",
-		fmt.Sprintf("file:%s?_foreign_keys=on", dbPath), dbLogger)
+		fmt.Sprintf("file:%s?_foreign_keys=on", dbPath), waLog.Noop)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "open store: %v\n", err)
 		os.Exit(1)
@@ -54,9 +54,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "get device: %v\n", err)
 		os.Exit(1)
 	}
-
-	clientLogger := waLog.Stdout("Client", "WARN", true)
-	client := whatsmeow.NewClient(device, clientLogger)
+	client := whatsmeow.NewClient(device, waLog.Noop)
 
 	// Register event handler.
 	client.AddEventHandler(func(evt interface{}) {

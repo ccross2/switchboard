@@ -54,21 +54,25 @@ export default function MessageInput({
   };
 
   return (
-    <div className="flex-shrink-0 border-t border-[#2a2a4a] bg-[#16213e] px-4 py-3">
-      <div className="flex items-end gap-2 rounded-xl border border-[#2a2a4a] bg-[#1a1a2e] px-3 py-2">
+    <div className="flex-shrink-0 border-t border-[#2a2a4a] bg-[#202c33] px-4 py-3">
+      <div className="flex items-end gap-2 rounded-xl bg-[#2a3942] px-3 py-2">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message… (Enter to send, Shift+Enter for newline)"
+          placeholder="Type a message…"
           rows={1}
-          className="max-h-32 flex-1 resize-none bg-transparent text-sm text-gray-100 placeholder-gray-600 outline-none"
+          className="max-h-32 flex-1 resize-none bg-transparent text-sm text-[#e9edef] placeholder-[#8696a0] outline-none"
           style={{ scrollbarWidth: "thin" }}
         />
         <button
           onClick={handleSend}
           disabled={!text.trim()}
-          className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#0f3460] text-gray-300 transition-colors hover:bg-blue-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+          style={{
+            backgroundColor: text.trim() ? "#00a884" : "#2a3942",
+            color: text.trim() ? "#fff" : "#8696a0",
+          }}
         >
           <SendIcon />
         </button>

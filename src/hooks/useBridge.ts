@@ -113,6 +113,7 @@ export function useBridge() {
         );
         unlisteners.push(unlisten);
       }
+      // Bridges are started on-demand when the user selects a service.
     };
 
     setup().catch(console.error);
